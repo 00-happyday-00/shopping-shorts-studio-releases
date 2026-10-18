@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Threads 연결 · Shopping Shorts Studio</title>
+<style>
+  body { margin: 0; background: #0b1120; color: #e5edff; font-family: "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif; line-height: 1.6; }
+  main { max-width: 640px; margin: 0 auto; padding: 48px 16px; }
+  h1 { font-size: 24px; margin: 0 0 12px; }
+  .card { background: #111a2e; border: 1px solid #23304d; border-radius: 16px; padding: 20px; margin-top: 16px; }
+  ol { padding-left: 22px; margin: 0; }
+  li { margin: 6px 0; }
+  button { margin-top: 14px; font-size: 18px; font-weight: 700; color: #fff; background: #3b82f6; border: 0; border-radius: 12px; padding: 12px 24px; cursor: pointer; }
+  button:hover { background: #2563eb; }
+  #done { margin-top: 10px; color: #86efac; min-height: 1.5em; }
+  .muted { color: #94a3c4; font-size: 14px; }
+  .warn { color: #fcd99a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Threads 로그인이 끝났습니다</h1>
+  <p id="state">이제 이 페이지의 주소를 Shopping Shorts Studio 앱에 붙여 넣으면 연결이 끝납니다.</p>
+  <div class="card">
+    <ol>
+      <li>아래 <b>주소 복사</b> 버튼을 누릅니다. (안 되면 위쪽 주소창의 주소 전체를 복사하세요)</li>
+      <li>앱의 <b>Threads 게시 계정</b> 카드에 있는 <b>로그인 뒤 주소창의 주소</b> 칸에 붙여 넣습니다.</li>
+      <li><b>연결 완료</b>를 누릅니다.</li>
+    </ol>
+    <button id="copy" type="button">주소 복사</button>
+    <div id="done" role="status"></div>
+  </div>
+  <p class="muted">이 페이지는 받은 값을 어디에도 보내거나 저장하지 않습니다. 주소 속 로그인 확인 값은 몇 분 뒤 만료되며, 앱의 비밀 키 없이는 쓸 수 없습니다. 이 주소를 다른 사람에게 보내지 마세요.</p>
+</main>
+<script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    if (q.get('error')) {
+      var s = document.getElementById('state');
+      s.textContent = 'Threads 화면에서 허용하지 않았거나 로그인이 취소되었습니다. 앱에서 다시 연결해 주세요.';
+      s.className = 'warn';
+    } else if (!q.get('code')) {
+      var t = document.getElementById('state');
+      t.textContent = '이 주소에는 로그인 확인 값이 없습니다. 앱의 Threads 카드에서 “Threads 계정으로 연결”부터 다시 해 주세요.';
+      t.className = 'warn';
+    }
+    document.getElementById('copy').addEventListener('click', function () {
+      var done = document.getElementById('done');
+      var text = location.href;
+      var ok = function () { done.textContent = '복사했습니다. 앱에 붙여 넣어 주세요.'; };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(ok, function () { done.textContent = '복사하지 못했습니다. 주소창의 주소를 직접 복사해 주세요.'; });
+      } else {
+        done.textContent = '주소창의 주소를 직접 복사해 주세요.';
+      }
+    });
+  })();
+</script>
+</body>
+</html>
